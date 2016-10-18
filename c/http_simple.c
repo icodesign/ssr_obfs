@@ -203,13 +203,13 @@ void boundary(char result[])
 {
     char *str = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     int i,lstr;
-    char ss[2] = {0};
+    char ss[3] = {0};
     lstr = strlen(str);
     srand((unsigned int)time((time_t *)NULL));
     for(i = 0; i < 32; ++i)
     {
-        sprintf(ss,"%c",str[(rand()%lstr)]);
-        strcat(result,ss);
+        sprintf(ss, "%c", str[(rand()%lstr)]);
+        strcat(result, ss);
     }
 }
 
@@ -288,7 +288,7 @@ int http_post_client_encode(obfs *self, char **pencryptdata, int datalength, siz
             hostport,
             body_buffer);
     } else {
-        char result[32]={0};
+        char result[33] = {0};
         boundary(result);
         sprintf(out_buffer,
             "POST /%s HTTP/1.1\r\n"
