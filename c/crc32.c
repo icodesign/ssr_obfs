@@ -1,4 +1,4 @@
-#include <stdint.h>
+#include <stdlib.h>
 #include "crc32.h"
 
 static uint32_t crc32_table[256] = {0};

@@ -1,14 +1,11 @@
 #include <string.h>
 #include <stdlib.h>
-
-#include "utils.h"
 #include "obfs.h"
 
 int rand_bytes(uint8_t *output, int len);
 
 #include "obfsutil.h"
 #include "crc32.h"
-#include "base64.h"
 #include "http_simple.h"
 #include "tls1.2_ticket.h"
 #include "verify.h"
