@@ -11,6 +11,8 @@ int rand_bytes(uint8_t *output, int len);
 #include "verify.h"
 #include "auth.h"
 
+#include "encrypt.h"
+
 void * init_data() {
     return malloc(1);
 }
