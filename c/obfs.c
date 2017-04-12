@@ -2,8 +2,6 @@
 #include <stdlib.h>
 #include "obfs.h"
 
-int rand_bytes(uint8_t *output, int len);
-
 #include "obfsutil.h"
 #include "crc32.h"
 #include "http_simple.h"
@@ -180,7 +178,6 @@ obfs_class * new_obfs_class(char *plugin_name)
 
         return plugin;
     }
-    LOGE("Load obfs '%s' failed", plugin_name);
     return NULL;
 }
 

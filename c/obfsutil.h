@@ -7,4 +7,6 @@ void init_shift128plus(void);
 
 uint64_t xorshift128plus(void);
 
+int rand_bytes(uint8_t *output, int len);
+
 #endif // _OBFS_OBFSUTIL_H

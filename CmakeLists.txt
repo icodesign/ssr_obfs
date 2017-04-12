@@ -1,0 +1,57 @@
+cmake_minimum_required(VERSION 3.4.0)
+
+project(ssr_obfs C)
+
+set(LIB_NAME ssr_obfs)
+set(PROJECT_MAJOR_VERSION 1)
+set(PROJECT_MINOR_VERSION 0)
+set(PROJECT_PATCH_VERSION 0)
+set(PROJECT_VERSION  ${PROJECT_MAJOR_VERSION}.${PROJECT_MINOR_VERSION}.${PROJECT_PATCH_VERSION})
+
+message(STATUS "")
+message(STATUS "Running ${CMAKE_COMMAND} ${CMAKE_VERSION} on ${LIB_NAME} v${PROJECT_VERSION}" )
+message(STATUS "EXECUTABLE_OUTPUT_PATH: ${EXECUTABLE_OUTPUT_PATH}")
+message(STATUS "LIBRARY_OUTPUT_PATH: ${LIBRARY_OUTPUT_PATH}")
+message(STATUS "CMAKE_INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX}")
+
+SET(SSR_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/c/)
+SET(SSR_SRC_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/c/)
+
+set(SSR_SRC
+    ${SSR_SRC_DIR}/auth.c
+    ${SSR_SRC_DIR}/base64.c
+    ${SSR_SRC_DIR}/crc32.c
+    ${SSR_SRC_DIR}/encrypt.c
+    ${SSR_SRC_DIR}/http_simple.c
+    ${SSR_SRC_DIR}/obfs.c
+    ${SSR_SRC_DIR}/obfsutil.c
+    ${SSR_SRC_DIR}/tls1.2_ticket.c
+    ${SSR_SRC_DIR}/verify.c
+    )
+
+set(SSR_HDR
+    ${SSR_SRC_INCLUDE_DIR}/auth.h
+    ${SSR_SRC_INCLUDE_DIR}/base64.h
+    ${SSR_SRC_INCLUDE_DIR}/crc32.h
+    ${SSR_SRC_INCLUDE_DIR}/encrypt.h
+    ${SSR_SRC_INCLUDE_DIR}/http_simple.h
+    ${SSR_SRC_INCLUDE_DIR}/obfs.h
+    ${SSR_SRC_INCLUDE_DIR}/obfsutil.h
+    ${SSR_SRC_INCLUDE_DIR}/tls1.2_ticket.h
+    ${SSR_SRC_INCLUDE_DIR}/verify.h
+    )
+
+SET(SSR_INCLUDE_DIR 
+    ${CMAKE_CURRENT_BINARY_DIR}/include)
+
+foreach(_var ${SSR_HDR})
+    file(COPY ${_var} DESTINATION ${SSR_INCLUDE_DIR})
+endforeach()
+
+include_directories(BEFORE ${SSR_INCLUDE_DIR})
+
+add_library(${LIB_NAME} STATIC ${SSR_HDR} ${SSR_SRC})
+
+ADD_DEFINITIONS(-DUSE_CRYPTO_OPENSSL)
+
+target_link_libraries(${PROJECT_NAME} ${OPENSSL_LIBRARIES} ${CMAKE_CURRENT_BINARY_DIR}/libsodium/lib/libsodium.a)

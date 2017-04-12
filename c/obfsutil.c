@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <time.h>
+#include <sodium.h>
 
 #include "obfsutil.h"
 
@@ -39,3 +40,7 @@ uint64_t xorshift128plus(void) {
     return x + y;
 }
 
+int rand_bytes(uint8_t *output, int len) {
+    randombytes_buf(output, len);
+    return 1;
+}
