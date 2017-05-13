@@ -2,6 +2,7 @@
 #include <time.h>
 
 #include "obfsutil.h"
+#include "encrypt.h"
 
 int get_head_size(char *plaindata, int size, int def_size) {
     if (plaindata == NULL || size < 2)
@@ -37,5 +38,28 @@ uint64_t xorshift128plus(void) {
     x ^= y ^ (y >> 26); // c
     shift128plus_s[1] = x;
     return x + y;
+}
+
+int ss_md5_hmac(char *auth, char *msg, int msg_len, uint8_t *iv, int enc_iv_len, uint8_t *enc_key, int enc_key_len)
+{
+    uint8_t auth_key[MAX_IV_LENGTH + MAX_KEY_LENGTH];
+    memcpy(auth_key, iv, enc_iv_len);
+    memcpy(auth_key + enc_iv_len, enc_key, enc_key_len);
+    return ss_md5_hmac_with_key(auth, msg, msg_len, auth_key, enc_iv_len + enc_key_len);
+}
+
+int ss_sha1_hmac(char *auth, char *msg, int msg_len, uint8_t *iv, int enc_iv_len, uint8_t *enc_key, int enc_key_len)
+{
+    uint8_t auth_key[MAX_IV_LENGTH + MAX_KEY_LENGTH];
+    memcpy(auth_key, iv, enc_iv_len);
+    memcpy(auth_key + enc_iv_len, enc_key, enc_key_len);
+    return ss_sha1_hmac_with_key(auth, msg, msg_len, auth_key, enc_iv_len + enc_key_len);
+}
+
+void memintcopy_lt(void *mem, uint32_t val) {
+    ((uint8_t *)mem)[0] = (uint8_t)(val);
+    ((uint8_t *)mem)[1] = (uint8_t)(val >> 8);
+    ((uint8_t *)mem)[2] = (uint8_t)(val >> 16);
+    ((uint8_t *)mem)[3] = (uint8_t)(val >> 24);
 }
 
