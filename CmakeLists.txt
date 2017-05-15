@@ -27,6 +27,8 @@ set(SSR_SRC
     ${SSR_SRC_DIR}/obfsutil.c
     ${SSR_SRC_DIR}/tls1.2_ticket.c
     ${SSR_SRC_DIR}/verify.c
+    ${SSR_SRC_DIR}/auth_chain.c
+    ${SSR_SRC_DIR}/utils.c
     )
 
 set(SSR_HDR
@@ -39,6 +41,8 @@ set(SSR_HDR
     ${SSR_SRC_INCLUDE_DIR}/obfsutil.h
     ${SSR_SRC_INCLUDE_DIR}/tls1.2_ticket.h
     ${SSR_SRC_INCLUDE_DIR}/verify.h
+    ${SSR_SRC_INCLUDE_DIR}/auth_chain.h
+    ${SSR_SRC_INCLUDE_DIR}/utils.h
     )
 
 SET(SSR_INCLUDE_DIR 

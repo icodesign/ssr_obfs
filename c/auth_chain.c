@@ -1,5 +1,6 @@
 #include <string.h>
 #include <time.h>
+#include <stdlib.h>
 #include "auth.h"
 #include "obfsutil.h"
 #include "crc32.h"
@@ -114,7 +115,7 @@ void auth_chain_a_dispose(obfs *self) {
         if (local->cipher_server_ctx) {
             enc_ctx_release(&local->cipher, local->cipher_server_ctx);
         }
-        enc_release(&local->cipher);
+//        enc_release(&local->cipher);
         local->cipher_init_flag = 0;
     }
     free(local);
@@ -365,7 +366,7 @@ int auth_chain_a_client_post_decrypt(obfs *self, char **pplaindata, int dataleng
         if (len >= 4096) {
             local->recv_buffer_size = 0;
             error = 1;
-            LOGE("post_decrypt wrong size %d", local->recv_id);
+//            LOGE("post_decrypt wrong size %d", local->recv_id);
             break;
         }
         if ((len += 4) > local->recv_buffer_size)
@@ -376,7 +377,7 @@ int auth_chain_a_client_post_decrypt(obfs *self, char **pplaindata, int dataleng
         if (memcmp(hash, recv_buffer + len - 2, 2)) {
             local->recv_buffer_size = 0;
             error = 1;
-            LOGE("post_decrypt wrong HMAC");
+//            LOGE("post_decrypt wrong HMAC");
             break;
         }
 
