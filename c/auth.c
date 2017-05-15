@@ -83,6 +83,10 @@ obfs * auth_aes128_sha1_new_obfs() {
     return self;
 }
 
+int auth_aes128_sha1_get_overhead(obfs *self) {
+    return 9;
+}
+
 void auth_simple_dispose(obfs *self) {
     auth_simple_local_data *local = (auth_simple_local_data*)self->l_data;
     if (local->recv_buffer != NULL) {
@@ -107,13 +111,6 @@ int auth_simple_pack_data(char *data, int datalength, char *outdata) {
     memmove(outdata + rand_len + 2, data, datalength);
     fillcrc32((unsigned char *)outdata, (unsigned int)out_size);
     return out_size;
-}
-
-void memintcopy_lt(void *mem, uint32_t val) {
-    ((uint8_t *)mem)[0] = (uint8_t)(val);
-    ((uint8_t *)mem)[1] = (uint8_t)(val >> 8);
-    ((uint8_t *)mem)[2] = (uint8_t)(val >> 16);
-    ((uint8_t *)mem)[3] = (uint8_t)(val >> 24);
 }
 
 int auth_simple_pack_auth_data(auth_simple_global_data *global, char *data, int datalength, char *outdata) {
@@ -796,11 +793,9 @@ int auth_aes128_sha1_pack_auth_data(auth_simple_global_data *global, server_info
     }
 
     {
-        uint8_t rnd[1];
-        rand_bytes(rnd, 1);
-        memcpy(outdata, rnd, 1);
+        rand_bytes((uint8_t*)outdata, 1);
         char hash[20];
-        local->hmac(hash, (char *)rnd, 1, key, key_len);
+        local->hmac(hash, (char *)outdata, 1, key, key_len);
         memcpy(outdata + 1, hash, 6);
     }
 

@@ -12,30 +12,33 @@
 
 #define OBFS_HMAC_SHA1_LEN 10
 
-typedef struct server_info {
+typedef struct {
     char host[256];
     uint16_t port;
     char *param;
     void *g_data;
     uint8_t *iv;
-    size_t iv_len;
+    uint16_t iv_len;
     uint8_t *recv_iv;
-    size_t recv_iv_len;
+    uint16_t recv_iv_len;
     uint8_t *key;
-    size_t key_len;
+    uint16_t key_len;
     int head_len;
-    size_t tcp_mss;
-    size_t buffer_size;
+    uint16_t tcp_mss;
+    uint16_t overhead;
+    uint32_t buffer_size;
+    cipher_env_t *cipher_env;
 }server_info;
 
-typedef struct obfs_struct {
+typedef struct {
     server_info server;
     void *l_data;
 }obfs;
 
-typedef struct obfs_class {
+typedef struct {
     void * (*init_data)();
     obfs * (*new_obfs)();
+    int  (*get_overhead)(obfs *self);
     void (*get_server_info)(obfs *self, server_info *server);
     void (*set_server_info)(obfs *self, server_info *server);
     void (*dispose)(obfs *self);

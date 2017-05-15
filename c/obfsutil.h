@@ -9,4 +9,6 @@ uint64_t xorshift128plus(void);
 
 int rand_bytes(uint8_t *output, int len);
 
+void memintcopy_lt(void *mem, uint32_t val);
+
 #endif // _OBFS_OBFSUTIL_H

@@ -44,3 +44,10 @@ int rand_bytes(uint8_t *output, int len) {
     randombytes_buf(output, len);
     return 1;
 }
+
+void memintcopy_lt(void *mem, uint32_t val) {
+    ((uint8_t *)mem)[0] = (uint8_t)(val);
+    ((uint8_t *)mem)[1] = (uint8_t)(val >> 8);
+    ((uint8_t *)mem)[2] = (uint8_t)(val >> 16);
+    ((uint8_t *)mem)[3] = (uint8_t)(val >> 24);
+}
