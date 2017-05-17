@@ -84,7 +84,7 @@ typedef struct {
 
 #endif
 
-typedef struct {
+typedef struct cipher_env {
     uint8_t *enc_table;
     uint8_t *dec_table;
     uint8_t enc_key[MAX_KEY_LENGTH];
@@ -117,7 +117,7 @@ typedef struct {
 
 #define SODIUM_BLOCK_SIZE   64
 
-enum crpher_index {
+enum cipher_index {
     NONE,
     TABLE,
     RC4,

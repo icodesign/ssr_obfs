@@ -1,6 +1,5 @@
 #include <string.h>
 #include <time.h>
-#include <stdlib.h>
 #include "auth.h"
 #include "obfsutil.h"
 #include "crc32.h"
@@ -115,7 +114,7 @@ void auth_chain_a_dispose(obfs *self) {
         if (local->cipher_server_ctx) {
             enc_ctx_release(&local->cipher, local->cipher_server_ctx);
         }
-//        enc_release(&local->cipher);
+        enc_release(&local->cipher);
         local->cipher_init_flag = 0;
     }
     free(local);
@@ -173,7 +172,7 @@ int auth_chain_a_pack_data(char *data, int datalength, char *outdata, auth_chain
             int start_pos = get_rand_start_pos(rand_len, &local->random_client);
             size_t out_len;
             ss_encrypt_buffer(&local->cipher, local->cipher_client_ctx,
-                    data, datalength, &outdata[2 + start_pos], &out_len);
+                              data, datalength, &outdata[2 + start_pos], &out_len);
             memcpy(outdata + 2, rnd_data, start_pos);
             memcpy(outdata + 2 + start_pos + datalength, rnd_data + start_pos, rand_len - start_pos);
         } else {
@@ -392,7 +391,7 @@ int auth_chain_a_client_post_decrypt(obfs *self, char **pplaindata, int dataleng
         }
         size_t out_len;
         ss_decrypt_buffer(&local->cipher, local->cipher_server_ctx,
-                (char*)recv_buffer + pos, data_len, buffer, &out_len);
+                          (char*)recv_buffer + pos, data_len, buffer, &out_len);
 
         if (local->recv_id == 1) {
             server->tcp_mss = (uint8_t)buffer[0] | ((uint8_t)buffer[1] << 8);
@@ -469,7 +468,7 @@ int auth_chain_a_client_udp_pre_encrypt(obfs *self, char **pplaindata, int datal
         enc_ctx_init(&local->cipher, &ctx, 1);
         size_t out_len;
         ss_encrypt_buffer(&local->cipher, &ctx,
-                plaindata, datalength, out_buffer, &out_len);
+                          plaindata, datalength, out_buffer, &out_len);
         enc_ctx_release(&local->cipher, &ctx);
         enc_release(&local->cipher);
     }
@@ -477,9 +476,8 @@ int auth_chain_a_client_udp_pre_encrypt(obfs *self, char **pplaindata, int datal
     for (int i = 0; i < 4; ++i) {
         uid[i] = local->uid[i] ^ hash[i];
     }
-    memmove(out_buffer + datalength, rnd_data, rand_len);
-    memmove(out_buffer + outlength - 8, auth_data, 3);
-    memmove(out_buffer + outlength - 5, uid, 4);
+    memmove(out_buffer + datalength, auth_data, 3);
+    memmove(out_buffer + datalength + 3, uid, 4);
 
     ss_md5_hmac_with_key((char*)hash, out_buffer, outlength - 1, local->user_key, local->user_key_len);
     memmove(out_buffer + outlength - 1, hash, 1);
@@ -521,10 +519,10 @@ int auth_chain_a_client_udp_post_decrypt(obfs *self, char **pplaindata, int data
         enc_ctx_init(&local->cipher, &ctx, 0);
         size_t out_len;
         ss_decrypt_buffer(&local->cipher, &ctx,
-                plaindata, outlength, plaindata, &out_len);
+                          plaindata, outlength, plaindata, &out_len);
         enc_ctx_release(&local->cipher, &ctx);
         enc_release(&local->cipher);
     }
-
+    
     return outlength;
 }
